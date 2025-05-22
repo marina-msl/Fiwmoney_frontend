@@ -66,6 +66,15 @@
   </script>
   
   <style scoped>
+
+  .stock-container {
+  display: flex;
+  gap: 26px;
+  flex-wrap: wrap; 
+  justify-content: center;
+  margin-top: 250px;
+  }
+
   .stock-card {
   border: 2px solid #02080f;
   padding: 16px;
@@ -90,5 +99,5 @@
   color: red;
   font-weight: bold;
 }
-  </style>
+</style>
   
