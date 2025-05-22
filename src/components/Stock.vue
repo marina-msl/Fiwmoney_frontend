@@ -1,17 +1,23 @@
 <template>
-    <div class="stock-card">
+    <div class="stock-container">
       <div
-        v-for="(sotck, index) in stocks"
+        v-for="(stock, index) in stocks"
         :key="index"
         class="stock-card"
       >
         <h2>{{ stock.name }}</h2>
         <p><strong>Preço Atual:</strong> R$ {{ stock.currentPrice.toFixed(2) }}</p>
         <p><strong>Preço Médio de Compra:</strong> R$ {{ stock.averagePrice.toFixed(2) }}</p>
-        <p><strong>Diferença:</strong> <span :class="profitClass">
-        R$ {{ stock.difference.toFixed(2) }} / {{ stock.percentage.toFixed(2) }}%
-        </span></p>
-        <p><strong>Status:</strong> <span :class="profitClass">{{ stock.status }}</span></p>
+        <p><strong>Diferença:</strong> 
+           <span :class="getProfit(stock)">
+            R$ {{ getDifference(stock).toFixed(2) }} / {{ getPercentage(stock).toFixed(2) }}%
+        </span>
+        </p>
+        <p><strong>Status:</strong> 
+          <span :class="getProfit(stock)">
+            {{ getStatus(stock) }}
+          </span>
+        </p>
       </div> 
     </div>
   </template>
@@ -20,48 +26,47 @@
   export default {
     data() {
       return {
-        stock: [ 
+        stocks: [ 
         {
           name: "PETR4 - Petrobras PN",
           currentPrice: 29.75,
           averagePrice: 28.50,
-          status: "Lucro! 🟢"
         },
         {
           name: "VALE3 - Vale ON",
           currentPrice: 65.80,
           averagePrice: 70.00
+        },
+        {
+          name: "ITUB4 - Itaú Unibanco PN",
+          currentPrice: 25.00,
+          averagePrice: 23.00
         }
       ]
       };
     },
-    // computed: {
-    //   profitClass() {
-    //     return this.stock.difference >= 0 ? "profit" : "loss";
-    //   }
-    // }
-    computed: {
-      difference() {
-        return this.stock.currentPrice - this.stock.averagePrice;
+    methods: {
+      getDifference(stock) {
+        return stock.currentPrice - stock.averagePrice;
       },
       
-      percentage() {
-        return (this.difference / this.stock.averagePrice) * 100;
+      getPercentage(stock) {
+        return (this.getDifference(stock) / stock.averagePrice) * 100;
       },
       
-      profitClass() {
-        return this.difference >= 0 ? "profit" : "loss";
+      getProfit(stock) {
+        return this.getDifference(stock) >= 0 ? "profit" : "loss";
       },
 
       status() {
-         return this.difference >= 0 ? "Lucro! 🟢" : "Prejuízo! 🔴";
+         return this.getDifference(stock) >= 0 ? "Lucro! 🟢" : "Prejuízo! 🔴";
       }
 }
   };
   </script>
   
   <style scoped>
-.stock-card {
+  .stock-card {
   border: 2px solid #02080f;
   padding: 16px;
   border-radius: 8px;
@@ -74,7 +79,7 @@
   
 .stock-card:hover {
   transform: scale(1.03);
-}
+} 
 
 .profit {
   color: green;
