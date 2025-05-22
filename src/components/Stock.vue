@@ -58,7 +58,7 @@
         return this.getDifference(stock) >= 0 ? "profit" : "loss";
       },
 
-      status() {
+      getStatus(stock) {
          return this.getDifference(stock) >= 0 ? "Lucro! 🟢" : "Prejuízo! 🔴";
       }
 }
