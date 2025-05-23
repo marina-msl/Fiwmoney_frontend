@@ -6,14 +6,14 @@
         class="stock-card"
       >
         <h2>{{ stock.name }}</h2>
-        <p><strong>Preço Atual:</strong> R$ {{ formatCurrency(stock.currentPrice) }}</p>
-        <p><strong>Preço Médio de Compra:</strong> R$ {{ formatCurrency(stock.averagePrice) }}</p>
-        <p><strong>Diferença:</strong> 
+        <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
+        <p><strong>Preço Médio de Compra:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
+        <p><strong>Diferença: </strong> 
            <span :class="getProfit(stock)">
-            R$ {{ formatCurrency(getDifference(stock)) }} / {{ getPercentage(stock).toFixed(2) }}%
+           {{ formatCurrency(getDifference(stock)) }} / {{ getPercentage(stock).toFixed(2) }}%
         </span>
         </p>
-        <p><strong>Status:</strong> 
+        <p><strong>Status: </strong> 
           <span :class="getProfit(stock)">
             {{ getStatus(stock) }}
           </span>
