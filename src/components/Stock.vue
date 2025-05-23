@@ -1,10 +1,19 @@
 <template>
-    <div class="stock-container">
+    <div>
+        <form @submit.prevent="addStock">
+        <label for="stockCode">Stock Code:</label>
+        <input type="text" id="stockCode" v-model="stockCode" placeHolder="Enter stock code" required/>
+        
+        <label for="currentPrice">Current Price</label>
+        <input type="number" id="currentPrice" v-model="currentPrice" placeHolder="Enter price" required/>
+
+        <button type="submit">Add Stock</button>
+    </form>
+
       <StockCard
-        v-for="(stock, index) in stocks"
-        :key="index"
+        v-for="stock in stocks"
+        :key="stock.code"
         :stock="stock"
-        class="stock-card"
       />
     </div>
   </template>
@@ -13,31 +22,29 @@
 import StockCard from './StockCard.vue';
 
   export default {
-    components: {
+    components: { 
       StockCard
     },
     data() {
       return {
-        stocks: [ 
-        {
-          name: "PETR4 - Petrobras PN",
-          currentPrice: 29.75,
-          averagePrice: 28.50,
-        },
-        {
-          name: "VALE3 - Vale ON",
-          currentPrice: 65.80,
-          averagePrice: 70.00
-        },
-        {
-          name: "ITUB4 - Itaú Unibanco PN",
-          currentPrice: 25.00,
-          averagePrice: 23.00
-        }
-      ]
+        stockCode: '',
+        currentPrice: '',
+        stocks: []
       };
+    },
+    methods: {
+      addStock() {
+        const newStock = { 
+          code: this.stockCode,
+          currentPrice: parseFloat(this.currentPrice), 
+          averagePrice: 100
+        };
+        this.stocks.push(newStock);
+        this.stockCode = '';
+        this.currentPrice = '';
+      }
     }
-  };
+  }; 
 </script>
 
   <style scoped>
