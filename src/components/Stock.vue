@@ -7,10 +7,10 @@
       >
         <h2>{{ stock.name }}</h2>
         <p><strong>Preço Atual:</strong> R$ {{ formatCurrency(stock.currentPrice) }}</p>
-        <p><strong>Preço Médio de Compra:</strong> R$ {{ stock.averagePrice.toFixed(2) }}</p>
+        <p><strong>Preço Médio de Compra:</strong> R$ {{ formatCurrency(stock.averagePrice) }}</p>
         <p><strong>Diferença:</strong> 
            <span :class="getProfit(stock)">
-            R$ {{ getDifference(stock).toFixed(2) }} / {{ getPercentage(stock).toFixed(2) }}%
+            R$ {{ formatCurrency(getDifference(stock)) }} / {{ getPercentage(stock).toFixed(2) }}%
         </span>
         </p>
         <p><strong>Status:</strong> 
