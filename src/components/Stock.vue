@@ -6,7 +6,7 @@
         class="stock-card"
       >
         <h2>{{ stock.name }}</h2>
-        <p><strong>Preço Atual:</strong> R$ {{ formatCurrency(stock.currentPrice.toFixed(2)) }}</p>
+        <p><strong>Preço Atual:</strong> R$ {{ formatCurrency(stock.currentPrice) }}</p>
         <p><strong>Preço Médio de Compra:</strong> R$ {{ stock.averagePrice.toFixed(2) }}</p>
         <p><strong>Diferença:</strong> 
            <span :class="getProfit(stock)">
