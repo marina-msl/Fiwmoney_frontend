@@ -1,7 +1,5 @@
 <template>
-  <div>
     <StockStatus />
-  </div>
 </template>
 
 <script>

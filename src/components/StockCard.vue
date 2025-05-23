@@ -58,7 +58,7 @@
   border: 2px solid #02080f;
   padding: 16px;
   border-radius: 8px;
-  background-color: #02010a;
+  background-color: #05021d;
   width: 300px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   color: #f0f0f0;
