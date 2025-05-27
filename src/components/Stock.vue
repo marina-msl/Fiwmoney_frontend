@@ -36,7 +36,7 @@ import StockCard from './StockCard.vue';
       };
     },
     methods: {
-      addStock() {
+      async addStock() {
         const exists = this.stocks.some(stock => stock.code == this.stockCode.toUpperCase());
         if (exists) {
           alert('Stock already exists!');
@@ -48,11 +48,32 @@ import StockCard from './StockCard.vue';
           averagePrice: 100
         };
         this.stocks.push(newStock);
-        this.stockCode = '';
-        this.currentPrice = '';
+
+        try {
+          const response = await fetch('http://localhost:8080/stock', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              code: newStock.code,
+              averagePrice: newStock.averagePrice
+            })
+          });
+            if(!response.ok) {
+              throw new Error('Failed to save stock');
+            }
+            console.log('Stock saved succesfully');
+        } catch (error) {
+          console.error('Error sending stock to backend: ', error);
+        }
+
+        //Reset form
+        this.stockCode =  '';
+        this.averagePrice = 0;
       }
     }
-  }; 
+  }
 </script>
 
   <style scoped>
