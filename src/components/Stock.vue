@@ -37,8 +37,13 @@ import StockCard from './StockCard.vue';
     },
     methods: {
       addStock() {
+        const exists = this.stocks.some(stock => stock.code == this.stockCode.toUpperCase());
+        if (exists) {
+          alert('Stock already exists!');
+          return;
+        }
         const newStock = { 
-          code: this.stockCode,
+          code: this.stockCode.toUpperCase(),
           currentPrice: parseFloat(this.currentPrice), 
           averagePrice: 100
         };

@@ -1,6 +1,6 @@
 <template>
     <div class="stock-card">
-        <h2>{{ stock.name }}</h2>
+        <h2>{{ stock.code }}</h2>
         <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
         <p><strong>Preço Médio de Compra:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
         <p><strong>Diferença: </strong> 
