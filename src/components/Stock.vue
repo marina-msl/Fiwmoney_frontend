@@ -4,8 +4,8 @@
         <label for="stockCode">Stock Code:</label>
         <input type="text" id="stockCode" v-model="stockCode" placeHolder="Enter stock code" required/>
         
-        <label for="currentPrice">Current Price</label>
-        <input type="number" id="currentPrice" v-model="currentPrice" placeHolder="Enter price" required
+        <label for="averagePrice">Average Price</label>
+        <input type="number" id="averagePrice" v-model="currentPrice" placeHolder="Enter price" required
                 step="0.01"/>
 
         <button type="submit">Add Stock</button>
@@ -31,7 +31,7 @@ import StockCard from './StockCard.vue';
     data() {
       return {
         stockCode: '',
-        currentPrice: 0,
+        averagePrice: 0,
         stocks: []
       };
     },
@@ -44,8 +44,8 @@ import StockCard from './StockCard.vue';
         }
         const newStock = { 
           code: this.stockCode.toUpperCase(),
-          currentPrice: parseFloat(this.currentPrice), 
-          averagePrice: 100
+          currentPrice: 100, 
+          averagePrice: parseFloat(this.averagePrice)
         };
         this.stocks.push(newStock);
 
@@ -78,33 +78,43 @@ import StockCard from './StockCard.vue';
 
   <style scoped>
 
-  .stock-page {
+.stock-page {
   min-height: 100vh;
-  background-color: var(--verde-escuro);
+  background: linear-gradient(to right, #000428, #004e92); /* corrigido */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px 20px;
-  }
+}
 
-  .stock-form {
+.stock-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: var(--cinza);
+  background: #000428;
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   width: 100%;
   max-width: 400px;
-  }
+}
 
-  .stock-form input {
+.stock-form label {
+  font-weight: bold;
+  color: var(--branco);
+}
+
+.stock-form input {
   padding: 10px;
   font-size: 1em;
   border: 1px solid var(--cinza-claro);
   border-radius: 8px;
-  outline: none;
+  background-color: #111827;
+  color: var(--branco);
+}
+
+.stock-form input::placeholder {
+  color: #9ca3af;
 }
 
 .stock-form input:focus {
@@ -112,7 +122,7 @@ import StockCard from './StockCard.vue';
 }
 
 .stock-form button {
-  background-color: var(--ocre);
+  background-color: #1abc9c;
   color: var(--branco);
   font-weight: bold;
   padding: 10px;
@@ -126,12 +136,12 @@ import StockCard from './StockCard.vue';
   background-color: var(--coral);
 }
 
-  .stock-container {
+.stock-container {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 40px;
-  }
+}
 
 </style>

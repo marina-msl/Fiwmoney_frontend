@@ -38,7 +38,7 @@ body {
   font-size: 16px;
   font-weight: 400;
   font-style: normal;
-  background: #250953;
+  background: linear-gradient(to right, #000428, #004e92 );
 }
 
 .cabecalho-lg {

@@ -2,7 +2,7 @@
     <div class="stock-card">
         <h2>{{ stock.code }}</h2>
         <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
-        <p><strong>Preço Médio de Compra:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
+        <p><strong>Preço Médio:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
         <p><strong>Diferença: </strong> 
            <span :class="getProfit(stock)">
            {{ formatCurrency(getDifference(stock)) }} / {{ getPercentage(stock).toFixed(2) }}%
@@ -53,30 +53,39 @@
 </script>
 
 <style>
-
 .stock-card {
-  border: 2px solid #02080f;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: #05021d;
-  width: 300px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-  color: #f0f0f0;
-  transition: transform 0.2s ease;
+  background-color: #161b22;
+  color: #c9d1d9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  width: 320px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  border: 1px solid #30363d;
 }
   
 .stock-card:hover {
-  transform: scale(1.03);
-} 
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  color: white;
+  margin-bottom: 12px;
+}
+
+p {
+  margin: 6px 0;
+  font-size: 1rem;
+}
 
 .profit {
-  color: green;
-  font-weight: bold;
+  color: #3fb950;
+  font-weight: 600;
 }
 
 .loss {
-  color: red;
-  font-weight: bold;
+  color: #f85149;
+  font-weight: 600;
 }
-
 </style>
