@@ -32,7 +32,9 @@ import StockCard from './StockCard.vue';
       return {
         stockCode: '',
         averagePrice: 0,
-        stocks: []
+        stocks: [],
+        statusMessage: '',
+        statusType: ''
       };
     },
     methods: {
@@ -60,12 +62,21 @@ import StockCard from './StockCard.vue';
               averagePrice: newStock.averagePrice
             })
           });
-            if(!response.ok) {
+
+            if (response.status == 404) {
+              alert('Stock not found!');
+            } else if (response.status == 500) {
+              alert('Internal error!');
+            } else if(!response.ok) {
               throw new Error('Failed to save stock');
             }
-            console.log('Stock saved succesfully');
+
+            alert('Stock saved succesfully');
+            
         } catch (error) {
-          console.error('Error sending stock to backend: ', error);
+          alert('Error sending stock to backend: ${error.message}');
+          this.statusMessage = error.message;
+          console.log(this.statusMessage);
         }
 
         //Reset form
@@ -133,6 +144,7 @@ import StockCard from './StockCard.vue';
 }
 
 .stock-form button:hover {
+
   background-color: var(--coral);
 }
 
