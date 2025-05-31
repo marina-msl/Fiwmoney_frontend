@@ -3,16 +3,8 @@
         <h2>{{ stock.code }}</h2>
         <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
         <p><strong>Preço Médio:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
-        <p><strong>Diferença: </strong> 
-           <span :class="getProfit(stock)">
-           {{ formatCurrency(getDifference(stock)) }} / {{ getPercentage(stock).toFixed(2) }}%
-        </span>
-        </p>
-        <p><strong>Status: </strong> 
-          <span :class="getProfit(stock)">
-            {{ getStatus(stock) }}
-          </span>
-        </p>
+        <p><strong>Diferença: </strong>  {{ formatCurrency(getDifference(stock)) }}</p>
+        <p><strong>Status: </strong>     {{ getStatus(stock) }}</p>    
     </div> 
   </template>
 
@@ -37,36 +29,32 @@
          return stock.currentPrice - stock.averagePrice;
         },
     
-        getPercentage(stock) {
-        return (this.getDifference(stock) / stock.averagePrice) * 100;
-        },
-    
-        getProfit(stock) {
-        return this.getDifference(stock) >= 0 ? "profit" : "loss";
-        },
-
         getStatus(stock) {
-         return this.getDifference(stock) >= 0 ? "Lucro! 🟢" : "Prejuízo! 🔴";
+         return this.getDifference(stock) >= 0 ? "Esperar 🔴" :  "Comprar! 🟢";
         }
+
+        // getNotify(stock) {
+        //     return true;
+        // }
+
     }   
 };
 </script>
 
-<style>
+<style scoped>
 .stock-card {
   background-color: #161b22;
   color: #c9d1d9;
-  padding: 20px;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  width: 320px;
+  width: 230px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
   border: 1px solid #30363d;
 }
   
 .stock-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  transform: scale(1.10);
 }
 
 h2 {
@@ -79,13 +67,4 @@ p {
   font-size: 1rem;
 }
 
-.profit {
-  color: #3fb950;
-  font-weight: 600;
-}
-
-.loss {
-  color: #f85149;
-  font-weight: 600;
-}
 </style>

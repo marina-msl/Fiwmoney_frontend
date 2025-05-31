@@ -1,12 +1,12 @@
 <template>
     <div class="stock-page">
         <form @submit.prevent="addStock" class="stock-form">
+
         <label for="stockCode">Stock Code:</label>
         <input type="text" id="stockCode" v-model="stockCode" placeHolder="Enter stock code" required/>
         
         <label for="averagePrice">Average Price</label>
-        <input type="number" id="averagePrice" v-model="averagePrice" placeHolder="Enter price" required
-                step="0.01"/>
+        <input type="number" id="averagePrice" v-model="averagePrice" placeHolder="Enter the stock average price" required step="0.01"/>
 
         <button type="submit">Add Stock</button>
     </form>
@@ -62,16 +62,17 @@ import StockCard from './StockCard.vue';
             if (response.status == 404) {
               alert('Stock not found!');
               return;
+
             } else if (response.status == 500) {
               alert('Internal error!');
               return;
+
             } else if(!response.ok) {
               throw new Error('Failed to save stock');
             }
 
             const stockResponse = await response.json();
             this.stocks.push(stockResponse);
-
             alert('Stock saved succesfully');
 
         } catch (error) {
@@ -88,11 +89,11 @@ import StockCard from './StockCard.vue';
   }
 </script>
 
-  <style scoped>
+<style>
 
 .stock-page {
   min-height: 100vh;
-  background: linear-gradient(to right, #000428, #004e92); /* corrigido */
+  background: linear-gradient(to right, #000428, #004e92);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -145,7 +146,6 @@ import StockCard from './StockCard.vue';
 }
 
 .stock-form button:hover {
-
   background-color: var(--coral);
 }
 
@@ -156,5 +156,4 @@ import StockCard from './StockCard.vue';
   justify-content: center;
   margin-top: 40px;
 }
-
 </style>
