@@ -24,6 +24,11 @@
                 required: true
         }
     },
+    data() {
+      return {
+        notify: false,
+      };
+    },
     methods: {
         formatCurrency(value) {
          return new Intl.NumberFormat('pt-BR', {
@@ -38,8 +43,35 @@
     
         getStatus(stock) {
          return this.getDifference(stock) >= 0 ? "Esperar 🔴" :  "Comprar! 🟢";
-        }
+        },
 
+        async toggleNotify() {
+          const notify = {
+            code: this.stock.code,
+            averagePrice: this.stock.averagePrice,
+            notify: this.notify
+          };
+
+          try {
+            const response = await fetch('http://localhost:8080/notify', {
+              method: 'POST',
+              headers: {
+                'Content-type':'application/json',
+              },
+              body: JSON.stringify(notify)
+            });
+
+            if (!response.ok) {
+              throw new Error (`Erro ao atualizar notificação para ${this.stock.code}`);
+            }
+
+            // const action = this.notify ? 'ativada' : 'desativada';
+          } catch (error) {
+            alert(`Erro: ${error.message}`);
+            // Revert toggle state on failure
+            this.notify = !this.notify;
+          }
+        }
     }   
 };
 </script>
