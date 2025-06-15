@@ -8,7 +8,7 @@
         <p>
           <strong>Notificar: </strong>
           <label class="switch">
-          <input type="checkbox" v-model="notify" @change="toggleNotify" />
+          <input type="checkbox" v-model="stock.notify" @change="toggleNotify" />
           <span class="slider"></span>
           </label>
         </p>
@@ -65,7 +65,6 @@
               throw new Error (`Erro ao atualizar notificação para ${this.stock.code}`);
             }
 
-            // const action = this.notify ? 'ativada' : 'desativada';
           } catch (error) {
             alert(`Erro: ${error.message}`);
             // Revert toggle state on failure
