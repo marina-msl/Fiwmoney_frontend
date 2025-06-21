@@ -24,3 +24,8 @@ npm run dev
 npm run build
 ```
 
+
+### The face:
+
+<img width="565" alt="image" src="https://github.com/user-attachments/assets/f84b8af9-36bc-4757-89c6-3234992b95f6" />
+
