@@ -92,7 +92,7 @@ import StockCard from './StockCard.vue';
             alert('Stock saved succesfully');
 
         } catch (error) {
-          alert('Error sending stock to backend: ${error.message}');
+          alert(`Error sending stock to backend: ${error.message}`);
           this.statusMessage = error.message;
           console.log(this.statusMessage);
         }
