@@ -1,14 +1,13 @@
 <template>
-    <div class="stock-page">
-        <form @submit.prevent="addStock" class="stock-form">
-
-        <label for="stockCode">Stock Code:</label>
-        <input type="text" id="stockCode" v-model="stockCode" placeHolder="Enter stock code" required/>
+  <div class="stock-page">
+    <form @submit.prevent="addStock" class="stock-form">
+      <label for="stockCode">Stock Code:</label>
+      <input type="text" id="stockCode" v-model="stockCode" placeHolder="Enter stock code" required/>
         
-        <label for="averagePrice">Average Price</label>
-        <input type="number" id="averagePrice" v-model="averagePrice" placeHolder="Enter the stock average price" required step="0.01"/>
+      <label for="averagePrice">Average Price</label>
+      <input type="number" id="averagePrice" v-model="averagePrice" placeHolder="Enter the stock average price" required step="0.01"/>
 
-        <button type="submit">Add Stock</button>
+      <button type="submit">Add Stock</button>
     </form>
 
     <div class="stock-container">
@@ -18,8 +17,8 @@
         :stock="stock"
       />
     </div>
-    </div>
-  </template>
+  </div>
+</template>
 
 <script>
 import StockCard from './StockCard.vue';
