@@ -24,11 +24,6 @@
                 required: true
         }
     },
-    data() {
-      return {
-        notify: false,
-      };
-    },
     methods: {
         formatCurrency(value) {
          return new Intl.NumberFormat('pt-BR', {
