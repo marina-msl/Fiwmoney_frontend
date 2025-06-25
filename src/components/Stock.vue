@@ -22,6 +22,7 @@
 
 <script>
 import StockCard from './StockCard.vue';
+import StockService from '../services/StockService'
 
   export default {
     components: { 
@@ -37,22 +38,12 @@ import StockCard from './StockCard.vue';
       };
     },
     mounted() {
-      this.fetchStockData();
+      StockService.fetchStocks()
+        .then(stocks => this.stocks = stocks)
+        .catch(error => console.error(`Error loading stocks :`, error));
     },
   
     methods: {
-      async fetchStockData() {
-        try {
-          const response = await fetch("http://localhost:8080/stocks");
-          if (!response.ok) throw new Error ("Failed to fetch stock data");
-          // console.log(data);
-          this.stocks = [ ... await response.json()];
-            
-          } catch(error) {
-              console.error("Error fetching stock data: " , error);
-          }
-        },
-
       async addStock() {
         const exists = this.stocks.some(stock => stock.code == this.stockCode.toUpperCase());
         if (exists) {
