@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import StockStatus from "@/components/Stock.vue";
+import StockStatus from "@/components/stock/Add.vue";
 
 export default {
   components: {

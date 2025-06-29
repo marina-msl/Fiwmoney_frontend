@@ -2,10 +2,10 @@
   <div class="stock-page">
     <form @submit.prevent="addStock" class="stock-form">
       <label for="stockCode">Stock Code:</label>
-      <input type="text" id="stockCode" v-model="stockCode" placeHolder="Enter stock code" required/>
+      <input type="text" id="stockCode" v-model="stockCode" placeholde="Enter stock code" required/>
         
       <label for="averagePrice">Average Price</label>
-      <input type="number" id="averagePrice" v-model="averagePrice" placeHolder="Enter the stock average price" required step="0.01"/>
+      <input type="number" id="averagePrice" v-model="averagePrice" placeholde="Enter the stock average price" required step="0.01"/>
 
       <button type="submit">Add Stock</button>
     </form>
@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import StockCard from './StockCard.vue';
-import StockService from '../services/StockService'
+import StockCard from './Cards.vue';
+import StockService from '../../services/StockService'
 
   export default {
     components: { 
@@ -52,7 +52,7 @@ import StockService from '../services/StockService'
         }
 
         const newStock = { 
-          code: this.stockCode.toUpperCase(),
+          code: this.stockCode.trim().toUpperCase(),
           averagePrice: parseFloat(this.averagePrice)
         };
 
@@ -158,8 +158,28 @@ import StockService from '../services/StockService'
 .stock-container {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 40px;
+  overflow-x: auto;
+  padding: 20px 0;
+  width: 100%;
+  scroll-snap-type: x mandatory;
+}
+
+.stock-container > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.stock-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.stock-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 8px;
+}
+
+.stock-container::-webkit-scrollbar-track {
+  background: #1e1e2f;
+
 }
 </style>
