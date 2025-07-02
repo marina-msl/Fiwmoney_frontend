@@ -57,29 +57,9 @@ import StockService from '../../services/StockService'
         };
 
         try {
-          const response = await fetch('http://localhost:8080/stock', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newStock)
-          });
-
-            if (response.status == 404) {
-              alert('Stock not found!');
-              return;
-
-            } else if (response.status == 500) {
-              alert('Internal error!');
-              return;
-
-            } else if(!response.ok) {
-              throw new Error('Failed to save stock');
-            }
-
-            const stockResponse = await response.json();
-            this.stocks.push(stockResponse);
-            alert('Stock saved succesfully');
+          const stockResponse = await StockService.addStock(newStock);
+          this.stocks.push(stockResponse);
+          alert('Stock saved succesfully');
 
         } catch (error) {
           alert(`Error sending stock to backend: ${error.message}`);
