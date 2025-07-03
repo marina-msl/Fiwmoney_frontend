@@ -66,7 +66,6 @@ import StockService from '../../services/StockService'
           this.statusMessage = error.message;
           console.log(this.statusMessage);
         }
-
         //Reset form
         this.stockCode =  '';
         this.averagePrice = 0;

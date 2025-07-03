@@ -16,58 +16,45 @@
   </template>
 
 <script>
-    export default {
-        name: "StockCard", 
-        props: {
-            stock: {
-                type: Object,
-                required: true
-        }
+  export default {
+    name: "StockCard", 
+    props: {
+      stock: {
+        type: Object,
+        required: true
+      }
     },
     methods: {
-        formatCurrency(value) {
-         return new Intl.NumberFormat('pt-BR', {
+      formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
          style: 'currency',
          currency: 'BRL'
         }).format(value);
-        },
+      },
 
-        getDifference(stock) {
-         return stock.currentPrice - stock.averagePrice;
-        },
+      getDifference(stock) {
+        return stock.currentPrice - stock.averagePrice;
+      },
     
-        getStatus(stock) {
-         return this.getDifference(stock) >= 0 ? "Esperar 🔴" :  "Comprar! 🟢";
-        },
+      getStatus(stock) {
+        return this.getDifference(stock) >= 0 ? "Esperar 🔴" :  "Comprar! 🟢";
+      },
 
-        async toggleNotify() {
-          const notify = {
-            code: this.stock.code,
-            averagePrice: this.stock.averagePrice,
-            notify: this.notify
-          };
+      async toggleNotify() {
+        const code = this.stock.code;
+        const isNotify = !this.notify;
 
-          try {
-            const response = await fetch('http://localhost:8080/notify', {
-              method: 'POST',
-              headers: {
-                'Content-type':'application/json',
-              },
-              body: JSON.stringify(notify)
-            });
-
-            if (!response.ok) {
-              throw new Error (`Erro ao atualizar notificação para ${this.stock.code}`);
-            }
-
-          } catch (error) {
-            alert(`Erro: ${error.message}`);
-            // Revert toggle state on failure
-            this.notify = !this.notify;
-          }
+        try {
+          await StockService.setNotify(code, isNotify);
+          this.notify = isNotify;
+        } catch (error) {
+          alert(`Erro: ${error.message}`);
+          this.notify = !this.notify;
         }
-    }   
+      }
+    }
 };
+
 </script>
 
 <style scoped>
