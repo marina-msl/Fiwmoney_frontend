@@ -16,6 +16,8 @@
   </template>
 
 <script>
+import StockService from '../../services/StockService'
+
   export default {
     name: "StockCard", 
     props: {
@@ -42,14 +44,13 @@
 
       async toggleNotify() {
         const code = this.stock.code;
-        const isNotify = !this.notify;
+        const newNotify = this.stock.notify;
 
         try {
-          await StockService.setNotify(code, isNotify);
-          this.notify = isNotify;
+          await StockService.setNotify(code, newNotify);
         } catch (error) {
           alert(`Erro: ${error.message}`);
-          this.notify = !this.notify;
+          this.stock.notify = !newNotify;
         }
       }
     }

@@ -34,25 +34,26 @@ async function addStock(newStock) {
 //TODO send the id and boolean
 // async function setNotify(id, isNotify ) {
 async function setNotify(code, notify ) {
-      try {
-            // TODO: Refactor to chang to a better notify endpoint
-            // const response = await fetch('http://localhost:8080/stock/id/notify', {
-            const response = await fetch(`${BASE_URL}/notify`, {
-              method: 'POST',
-              headers: {
+    try {
+        // TODO: Refactor to chang to a better notify endpoint
+        // const response = await fetch('http://localhost:8080/stock/id/notify', {
+        const response = await fetch(`${BASE_URL}/notify`, {
+            method: 'POST',
+            headers: {
                 'Content-type':'application/json',
-              },
-              body: JSON.stringify(code, notify)
-            });
+            },
+            body: JSON.stringify({code, notify})
+        });
 
-            if (!response.ok) {
-              throw new Error (`Erro ao atualizar notificação para ${this.stock.code}`);
-            }
-            return await response.text();
-          } catch (error) {
-            alert('Notify update failed: ', error.message);
-            throw error;
-          }
+        if (!response.ok) {
+            throw new Error (`Erro ao atualizar notificação para ${code}`);
+        }
+
+        return await response.text();
+    } catch (error) {
+        alert('Notify update failed: ', error.message);
+        throw error;
+    }
 }             
 
 export default {
