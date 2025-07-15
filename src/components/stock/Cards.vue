@@ -16,7 +16,7 @@
   </template>
 
 <script>
-import StockService from '../../services/StockService'
+import StockService from '@/services/StockService'
 
   export default {
     name: "StockCard", 

@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import StockCard from './Cards.vue';
-import StockService from '../../services/StockService'
+import StockCard from '@/Cards.vue';
+import StockService from '@/services/StockService'
 
   export default {
     components: { 
