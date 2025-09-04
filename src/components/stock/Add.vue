@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import StockCard from '@/Cards.vue';
+import StockCard from '@/components/stock/Cards.vue';
 import StockService from '@/services/StockService'
 
   export default {
