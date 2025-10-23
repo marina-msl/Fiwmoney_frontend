@@ -10,6 +10,15 @@
         required
       />
 
+      <label for="email">E-mail:</label>
+      <input
+        id="email"
+        type="text"
+        v-model="email"
+        placeholder="Type your e-mail"
+        required
+      />
+
       <label for="username">User:</label>
       <input
         id="username"
@@ -54,6 +63,7 @@ export default {
     return {
       name: "",
       username: "",
+      email: "",
       password: "",
       confirmPassword: "",
       loading: false,
@@ -77,6 +87,7 @@ export default {
           body: JSON.stringify({
             name: this.name,
             username: this.username,
+            email: this.email,
             password: this.password
           }),
         });
