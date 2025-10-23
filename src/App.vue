@@ -1,13 +1,7 @@
 <template>
-    <StockStatus />
+    <router-view></router-view>
 </template>
 
 <script>
-import StockStatus from "@/components/auth/Login.vue";
-
-export default {
-  components: {
-    StockStatus
-  }
-};
+export default {};
 </script>
