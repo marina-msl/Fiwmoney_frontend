@@ -35,7 +35,7 @@ async function addStock(newStock) {
 // async function setNotify(id, isNotify ) {
 async function setNotify(code, notify ) {
     try {
-        // TODO: Refactor to chang to a better notify endpoint
+        // TODO: Refactor to change to a better notify endpoint
         // const response = await fetch('http://localhost:8080/stock/id/notify', {
         const response = await fetch(`${BASE_URL}/notify`, {
             method: 'POST',
