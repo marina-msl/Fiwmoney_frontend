@@ -37,14 +37,6 @@
         required
       />
 
-      <label for="tenant">Tenant:</label>
-      <input
-        id="tenant"
-        type="text"
-        v-model="tenant"
-        placeholder="Enter tenant ID"
-        required
-      />
 
       <button type="submit" :disabled="loading">
         {{ loading ? "Registering..." : "Register" }}
@@ -64,7 +56,6 @@ export default {
       username: "",
       password: "",
       confirmPassword: "",
-      tenant: "",
       loading: false,
       errorMessage: "",
     };
@@ -86,8 +77,7 @@ export default {
           body: JSON.stringify({
             name: this.name,
             username: this.username,
-            password: this.password,
-            tenant: this.tenant
+            password: this.password
           }),
         });
 
