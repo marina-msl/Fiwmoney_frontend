@@ -23,6 +23,11 @@
         {{ loading ? "Logging in..." : "Login" }}
       </button>
 
+       <p class="register-link">
+        Don’t have an account?
+        <router-link to="/register">Register here</router-link>
+      </p>
+
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </form>
   </div>
@@ -132,6 +137,22 @@ export default {
 
 .login-form button:hover {
   background-color: #16a085;
+}
+
+.register-link {
+  text-align: center;
+  color: #ffffff;
+  font-size: 0.9em;
+}
+
+.register-link a {
+  color: #1abc9c;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
 }
 
 .error {
