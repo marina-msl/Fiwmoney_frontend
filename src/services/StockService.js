@@ -13,7 +13,8 @@ async function addStock(newStock) {
         const response = await fetch(`${BASE_URL}/stocks`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify(newStock)
         });
