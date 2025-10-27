@@ -67,9 +67,8 @@ export default {
 
         const data = await response.json();
         localStorage.setItem('token', data.token);
-
-        // Redirecionar o usuário para a tela principal
-        // ex: this.$router.push('/dashboard');
+        this.$router.push('/add');
+        
       } catch (error) {
         this.errorMessage = error.message;
       } finally {
