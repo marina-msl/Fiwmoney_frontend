@@ -81,13 +81,13 @@ export default {
       this.errorMessage = "";
 
       try {
-        const response = await fetch("http://localhost:8080/register", {
+        const response = await fetch("http://localhost:8080/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: this.name,
-            username: this.username,
             email: this.email,
+            username: this.username,
             password: this.password
           }),
         });
@@ -97,9 +97,13 @@ export default {
         }
 
         const data = await response.json();
-        // opcional: armazenar token ou redirecionar
         localStorage.setItem("token", data.token);
-        // ex: this.$router.push('/dashboard');
+        
+        this.successMessage = "User registered successfully!";
+        setTimeout(() => {
+          this.$router.push('/add');
+        }, 1500)
+
       } catch (error) {
         this.errorMessage = error.message;
       } finally {
