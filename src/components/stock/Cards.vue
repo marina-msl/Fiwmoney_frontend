@@ -1,62 +1,62 @@
-<template>
-    <div class="stock-card">
-        <h2>{{ stock.code }}</h2>
-        <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
-        <p><strong>Preço Médio:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
-        <p><strong>Diferença: </strong>  {{ formatCurrency(getDifference(stock)) }}</p>
-        <p><strong>Status: </strong>     {{ getStatus(stock) }}</p>    
-        <p>
-          <strong>Notificar: </strong>
-          <label class="switch">
-          <input type="checkbox" v-model="stock.notify" @change="toggleNotify" />
-          <span class="slider"></span>
-          </label>
-        </p>
-    </div> 
-  </template>
-
 <script>
 import StockService from '@/services/StockService'
 
-  export default {
-    name: "StockCard", 
-    props: {
-      stock: {
-        type: Object,
-        required: true
+export default {
+  name: 'StockCard',
+  props: {
+    stock: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    formatCurrency(value) {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(value)
+    },
+
+    getDifference(stock) {
+      return stock.currentPrice - stock.averagePrice
+    },
+
+    getStatus(stock) {
+      return this.getDifference(stock) >= 0 ? 'Esperar 🔴' : 'Comprar! 🟢'
+    },
+
+    async toggleNotify() {
+      const code = this.stock.code
+      const newNotify = this.stock.notify
+
+      try {
+        await StockService.setNotify(code, newNotify)
+      }
+      catch (error) {
+        alert(`Erro: ${error.message}`)
+        this.stock.notify = !newNotify
       }
     },
-    methods: {
-      formatCurrency(value) {
-        return new Intl.NumberFormat('pt-BR', {
-         style: 'currency',
-         currency: 'BRL'
-        }).format(value);
-      },
-
-      getDifference(stock) {
-        return stock.currentPrice - stock.averagePrice;
-      },
-    
-      getStatus(stock) {
-        return this.getDifference(stock) >= 0 ? "Esperar 🔴" :  "Comprar! 🟢";
-      },
-
-      async toggleNotify() {
-        const code = this.stock.code;
-        const newNotify = this.stock.notify;
-
-        try {
-          await StockService.setNotify(code, newNotify);
-        } catch (error) {
-          alert(`Erro: ${error.message}`);
-          this.stock.notify = !newNotify;
-        }
-      }
-    }
-};
-
+  },
+}
 </script>
+
+<template>
+  <div class="stock-card">
+    <h2>{{ stock.code }}</h2>
+    <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
+    <p><strong>Preço Médio:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
+    <p><strong>Diferença: </strong>  {{ formatCurrency(getDifference(stock)) }}</p>
+    <p><strong>Status: </strong>     {{ getStatus(stock) }}</p>
+    <p>
+      <strong>Notificar: </strong>
+      <label class="switch">
+        <input v-model="stock.notify" type="checkbox" @change="toggleNotify">
+        <span class="slider" />
+      </label>
+    </p>
+  </div>
+</template>
 
 <style scoped>
 .stock-card {
@@ -69,7 +69,7 @@ import StockService from '@/services/StockService'
   transition: transform 0.2s ease, box-shadow 0.3s ease;
   border: 1px solid #30363d;
 }
-  
+
 .stock-card:hover {
   transform: scale(1.10);
 }
@@ -128,5 +128,4 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(18px);
 }
-
 </style>

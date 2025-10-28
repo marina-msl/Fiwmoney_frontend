@@ -1,13 +1,69 @@
+<script>
+import StockCard from '@/components/stock/Cards.vue'
+import StockService from '@/services/StockService'
+
+export default {
+  components: {
+    StockCard,
+  },
+  data() {
+    return {
+      stockCode: '',
+      averagePrice: 0,
+      stocks: [],
+      statusMessage: '',
+      statusType: '',
+    }
+  },
+  mounted() {
+    StockService.fetchStocks()
+      .then(stocks => this.stocks = stocks)
+      .catch(error => console.error(`Error loading stocks :`, error))
+  },
+
+  methods: {
+    async addStock() {
+      const exists = this.stocks.some(stock => stock.code == this.stockCode.toUpperCase())
+      if (exists) {
+        alert('Stock already exists!')
+        return
+      }
+
+      const newStock = {
+        code: this.stockCode.trim().toUpperCase(),
+        averagePrice: Number.parseFloat(this.averagePrice),
+      }
+
+      try {
+        const stockResponse = await StockService.addStock(newStock)
+        this.stocks.push(stockResponse)
+        alert('Stock saved succesfully')
+      }
+      catch (error) {
+        alert(`Error sending stock to backend: ${error.message}`)
+        this.statusMessage = error.message
+        console.log(this.statusMessage)
+      }
+      // Reset form
+      this.stockCode = ''
+      this.averagePrice = 0
+    },
+  },
+}
+</script>
+
 <template>
   <div class="stock-page">
-    <form @submit.prevent="addStock" class="stock-form">
+    <form class="stock-form" @submit.prevent="addStock">
       <label for="stockCode">Stock Code:</label>
-      <input type="text" id="stockCode" v-model="stockCode" placeholde="Enter stock code" required/>
-        
-      <label for="averagePrice">Average Price</label>
-      <input type="number" id="averagePrice" v-model="averagePrice" placeholde="Enter the stock average price" required step="0.01"/>
+      <input id="stockCode" v-model="stockCode" type="text" placeholde="Enter stock code" required>
 
-      <button type="submit">Add Stock</button>
+      <label for="averagePrice">Average Price</label>
+      <input id="averagePrice" v-model="averagePrice" type="number" placeholde="Enter the stock average price" required step="0.01">
+
+      <button type="submit">
+        Add Stock
+      </button>
     </form>
 
     <div class="stock-container">
@@ -20,62 +76,7 @@
   </div>
 </template>
 
-<script>
-import StockCard from '@/components/stock/Cards.vue';
-import StockService from '@/services/StockService'
-
-  export default {
-    components: { 
-      StockCard
-    },
-    data() {
-      return {
-        stockCode: '',
-        averagePrice: 0,
-        stocks: [],
-        statusMessage: '',
-        statusType: ''
-      };
-    },
-    mounted() {
-      StockService.fetchStocks()
-        .then(stocks => this.stocks = stocks)
-        .catch(error => console.error(`Error loading stocks :`, error));
-    },
-  
-    methods: {
-      async addStock() {
-        const exists = this.stocks.some(stock => stock.code == this.stockCode.toUpperCase());
-        if (exists) {
-          alert('Stock already exists!');
-          return;
-        }
-
-        const newStock = { 
-          code: this.stockCode.trim().toUpperCase(),
-          averagePrice: parseFloat(this.averagePrice)
-        };
-
-        try {
-          const stockResponse = await StockService.addStock(newStock);
-          this.stocks.push(stockResponse);
-          alert('Stock saved succesfully');
-
-        } catch (error) {
-          alert(`Error sending stock to backend: ${error.message}`);
-          this.statusMessage = error.message;
-          console.log(this.statusMessage);
-        }
-        //Reset form
-        this.stockCode =  '';
-        this.averagePrice = 0;
-      }
-    }
-  }
-</script>
-
 <style>
-
 .stock-page {
   min-height: 100vh;
   background: linear-gradient(to right, #000428, #004e92);

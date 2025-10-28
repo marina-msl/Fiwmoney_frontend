@@ -1,83 +1,88 @@
-<template>
-  <div class="login-page">
-    <form @submit.prevent="login" class="login-form">
-      <label for="username">User:</label>
-      <input
-        id="username"
-        type="text"
-        v-model="username"
-        placeholder="Type your username"
-        required
-      />
-
-      <label for="password">Password:</label>
-      <input
-        id="password"
-        type="password"
-        v-model="password"
-        placeholder="Type your password"
-        required
-      />
-
-      <button type="submit" :disabled="loading">
-        {{ loading ? "Logging in..." : "Login" }}
-      </button>
-
-       <p class="register-link">
-        Don’t have an account?
-        <router-link to="/register">Register here</router-link>
-      </p>
-
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-    </form>
-  </div>
-</template>
-
 <script>
 export default {
-  name: "LoginView",
+  name: 'LoginView',
   data() {
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       loading: false,
-      errorMessage: "",
-    };
+      errorMessage: '',
+    }
   },
   methods: {
     async login() {
-      this.loading = true;
-      this.errorMessage = "";
+      this.loading = true
+      this.errorMessage = ''
 
       try {
         const response = await fetch('http://localhost:8080/api/auth/login', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             username: this.username,
-            password: this.password
-          })
-        });
+            password: this.password,
+          }),
+        })
 
         if (!response.ok) {
-          throw new Error('Invalid username or password');
+          throw new Error('Invalid username or password')
         }
 
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        this.$router.push('/add');
-        
-      } catch (error) {
-        this.errorMessage = error.message;
-      } finally {
-        this.loading = false;
+        const data = await response.json()
+        localStorage.setItem('token', data.token)
+        this.$router.push('/add')
       }
-    }
+      catch (error) {
+        this.errorMessage = error.message
+      }
+      finally {
+        this.loading = false
+      }
+    },
   },
-};
+}
 </script>
+
+<template>
+  <div class="login-page">
+    <form class="login-form" @submit.prevent="login">
+      <label for="username">User:</label>
+      <input
+        id="username"
+        v-model="username"
+        type="text"
+        placeholder="Type your username"
+        required
+      >
+
+      <label for="password">Password:</label>
+      <input
+        id="password"
+        v-model="password"
+        type="password"
+        placeholder="Type your password"
+        required
+      >
+
+      <button type="submit" :disabled="loading">
+        {{ loading ? "Logging in..." : "Login" }}
+      </button>
+
+      <p class="register-link">
+        Don’t have an account?
+        <router-link to="/register">
+          Register here
+        </router-link>
+      </p>
+
+      <p v-if="errorMessage" class="error">
+        {{ errorMessage }}
+      </p>
+    </form>
+  </div>
+</template>
 
 <style scoped>
 .login-page {

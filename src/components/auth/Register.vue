@@ -1,118 +1,120 @@
+<script>
+export default {
+  name: 'RegisterView',
+  data() {
+    return {
+      name: '',
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      loading: false,
+      errorMessage: '',
+    }
+  },
+  methods: {
+    async register() {
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = 'Passwords do not match'
+        return
+      }
+
+      this.loading = true
+      this.errorMessage = ''
+
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: this.name,
+            email: this.email,
+            username: this.username,
+            password: this.password,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Registration failed')
+        }
+
+        const data = await response.json()
+        localStorage.setItem('token', data.token)
+
+        this.successMessage = 'User registered successfully!'
+        setTimeout(() => {
+          this.$router.push('/add')
+        }, 1500)
+      }
+      catch (error) {
+        this.errorMessage = error.message
+      }
+      finally {
+        this.loading = false
+      }
+    },
+  },
+}
+</script>
+
 <template>
   <div class="register-page">
-    <form @submit.prevent="register" class="register-form">
+    <form class="register-form" @submit.prevent="register">
       <label for="name">Full Name:</label>
       <input
         id="name"
-        type="text"
         v-model="name"
+        type="text"
         placeholder="Type your full name"
         required
-      />
+      >
 
       <label for="email">E-mail:</label>
       <input
         id="email"
-        type="text"
         v-model="email"
+        type="text"
         placeholder="Type your e-mail"
         required
-      />
+      >
 
       <label for="username">User:</label>
       <input
         id="username"
-        type="text"
         v-model="username"
+        type="text"
         placeholder="Type your username"
         required
-      />
+      >
 
       <label for="password">Password:</label>
       <input
         id="password"
-        type="password"
         v-model="password"
+        type="password"
         placeholder="Type your password"
         required
-      />
+      >
 
       <label for="confirmPassword">Confirm Password:</label>
       <input
         id="confirmPassword"
-        type="password"
         v-model="confirmPassword"
+        type="password"
         placeholder="Confirm your password"
         required
-      />
-
+      >
 
       <button type="submit" :disabled="loading">
         {{ loading ? "Registering..." : "Register" }}
       </button>
 
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="error">
+        {{ errorMessage }}
+      </p>
     </form>
   </div>
 </template>
-
-<script>
-export default {
-  name: "RegisterView",
-  data() {
-    return {
-      name: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      loading: false,
-      errorMessage: "",
-    };
-  },
-  methods: {
-    async register() {
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = "Passwords do not match";
-        return;
-      }
-
-      this.loading = true;
-      this.errorMessage = "";
-
-      try {
-        const response = await fetch("http://localhost:8080/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: this.name,
-            email: this.email,
-            username: this.username,
-            password: this.password
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Registration failed");
-        }
-
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        
-        this.successMessage = "User registered successfully!";
-        setTimeout(() => {
-          this.$router.push('/add');
-        }, 1500)
-
-      } catch (error) {
-        this.errorMessage = error.message;
-      } finally {
-        this.loading = false;
-      }
-    }
-  },
-};
-</script>
 
 <style scoped>
 .register-page {
