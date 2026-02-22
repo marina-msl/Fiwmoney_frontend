@@ -1,19 +1,25 @@
 const BASE_URL = 'http://localhost:8080'
 
-async function fetchStocks() {
-  const response = await fetch (`${BASE_URL}/stocks`)
+async function fetchStocks(walletId) {
+  const token = localStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/wallet/${walletId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   if (!response.ok)
-    throw new Error ('Failed to fetch stocks')
+    throw new Error('Failed to fetch stocks')
   return await response.json()
 }
 
-async function addStock(newStock) {
+async function addStock(walletId, newStock) {
   try {
-    const response = await fetch(`${BASE_URL}/stocks`, {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${BASE_URL}/wallet/${walletId}/stocks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(newStock),
     })
@@ -36,11 +42,11 @@ async function addStock(newStock) {
 }
 // TODO send the id and boolean
 // async function setNotify(id, isNotify ) {
-async function setNotify(code, notify) {
+async function setNotify(walletId, code, notify) {
   try {
-  // TODO: Refactor to change to a better notify endpoint
-  // const response = await fetch('http://localhost:8080/stock/id/notify', {
-    const response = await fetch(`${BASE_URL}/notify`, {
+    // TODO: Refactor to change to a better notify endpoint
+    // const response = await fetch('http://localhost:8080/stock/id/notify', {
+    const response = await fetch(`${BASE_URL}/wallet/{walletId}/notify`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
@@ -49,7 +55,7 @@ async function setNotify(code, notify) {
     })
 
     if (!response.ok) {
-      throw new Error (`Erro ao atualizar notificação para ${code}`)
+      throw new Error(`Erro ao atualizar notificação para ${code}`)
     }
 
     return await response.text()

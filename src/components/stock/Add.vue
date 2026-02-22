@@ -16,14 +16,15 @@ export default {
     }
   },
   mounted() {
-    StockService.fetchStocks()
+    const walletId = localStorage.getItem('walletId')
+    StockService.fetchStocks(walletId)
       .then(stocks => this.stocks = stocks)
       .catch(error => console.error(`Error loading stocks :`, error))
   },
 
   methods: {
     async addStock() {
-      const exists = this.stocks.some(stock => stock.code == this.stockCode.toUpperCase())
+      const exists = this.stocks.some(stock => stock.code === this.stockCode.toUpperCase())
       if (exists) {
         alert('Stock already exists!')
         return
@@ -37,9 +38,11 @@ export default {
       try {
         const stockResponse = await StockService.addStock(newStock)
         this.stocks.push(stockResponse)
+        // eslint-disable-next-line no-alert
         alert('Stock saved succesfully')
       }
       catch (error) {
+        // eslint-disable-next-line no-alert
         alert(`Error sending stock to backend: ${error.message}`)
         this.statusMessage = error.message
         console.log(this.statusMessage)
