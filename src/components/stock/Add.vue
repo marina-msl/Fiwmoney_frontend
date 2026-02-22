@@ -18,7 +18,7 @@ export default {
   mounted() {
     const walletId = localStorage.getItem('walletId')
     StockService.fetchStocks(walletId)
-      .then(stocks => this.stocks = stocks)
+      .then(wallet => this.stocks = wallet.stocks)
       .catch(error => console.error(`Error loading stocks :`, error))
   },
 
@@ -36,7 +36,9 @@ export default {
       }
 
       try {
-        const stockResponse = await StockService.addStock(newStock)
+        const walletId = localStorage.getItem('walletId')
+
+        const stockResponse = await StockService.addStock(walletId, newStock)
         this.stocks.push(stockResponse)
         // eslint-disable-next-line no-alert
         alert('Stock saved succesfully')
