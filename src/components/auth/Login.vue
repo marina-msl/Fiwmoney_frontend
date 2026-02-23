@@ -33,6 +33,7 @@ export default {
         const data = await response.json()
         localStorage.setItem('token', data.token)
         localStorage.setItem('walletId', data.walletId)
+        localStorage.setItem('username', this.username)
         this.$router.push('/add')
       }
       catch (error) {
