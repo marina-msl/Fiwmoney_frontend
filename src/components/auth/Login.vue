@@ -15,7 +15,7 @@ export default {
       this.errorMessage = ''
 
       try {
-        const response = await fetch('http://localhost:8080/api/auth/login', {
+        const response = await fetch('http://localhost:8080/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -27,6 +27,9 @@ export default {
         })
 
         if (!response.ok) {
+          if (response.status === 403) {
+            throw new Error('Access denied (403). If you just registered, the account may need to be activated or the login endpoint may differ.')
+          }
           throw new Error('Invalid username or password')
         }
 
