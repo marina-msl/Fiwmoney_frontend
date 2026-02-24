@@ -18,14 +18,26 @@ export default {
   mounted() {
     const walletId = localStorage.getItem('walletId')
     StockService.fetchStocks(walletId)
-      .then(wallet => this.stocks = wallet.stocks)
-      .catch(error => console.error(`Error loading stocks :`, error))
+      .then((wallet) => { this.stocks = wallet.stocks })
+      .catch((error) => {
+        console.error('Error loading stocks:', error)
+        if (error.status === 403) {
+          localStorage.removeItem('token')
+          localStorage.removeItem('walletId')
+          localStorage.removeItem('username')
+          this.$router.push('/login')
+        }
+        else {
+          this.statusMessage = error.message
+        }
+      })
   },
 
   methods: {
     async addStock() {
       const exists = this.stocks.some(stock => stock.code === this.stockCode.toUpperCase())
       if (exists) {
+        // eslint-disable-next-line no-alert
         alert('Stock already exists!')
         return
       }
@@ -35,23 +47,63 @@ export default {
         averagePrice: Number.parseFloat(this.averagePrice),
       }
 
+      const walletId = localStorage.getItem('walletId')
       try {
-        const walletId = localStorage.getItem('walletId')
-
         const stockResponse = await StockService.addStock(walletId, newStock)
-        this.stocks.push(stockResponse)
+        this.stocks.push({ ...stockResponse, code: stockResponse.code ?? newStock.code })
         // eslint-disable-next-line no-alert
         alert('Stock saved succesfully')
       }
       catch (error) {
-        // eslint-disable-next-line no-alert
-        alert(`Error sending stock to backend: ${error.message}`)
-        this.statusMessage = error.message
-        console.log(this.statusMessage)
+        if (error.status === 403) {
+          try {
+            const retryResponse = await StockService.addStock(walletId, newStock)
+            this.stocks.push({ ...retryResponse, code: retryResponse.code ?? newStock.code })
+            // eslint-disable-next-line no-alert
+            alert('Stock saved successfully')
+          }
+          catch (retryError) {
+            this.statusMessage = retryError.message
+            // eslint-disable-next-line no-alert
+            alert(`Error sending stock to backend: ${retryError.message}`)
+            console.error('Add stock error:', retryError)
+          }
+        }
+        else {
+          this.statusMessage = error.message
+          // eslint-disable-next-line no-alert
+          alert(`Error sending stock to backend: ${error.message}`)
+          console.error('Add stock error:', error)
+        }
       }
       // Reset form
       this.stockCode = ''
       this.averagePrice = 0
+    },
+
+    async removeStock(stock) {
+      const code = stock.code
+
+      if (!code) {
+        // eslint-disable-next-line no-alert
+        alert('Cannot delete this stock because it has no code.')
+        return
+      }
+
+      // eslint-disable-next-line no-alert
+      if (!confirm(`Excluir a stock ${code}?`)) {
+        return
+      }
+
+      const walletId = localStorage.getItem('walletId')
+      try {
+        await StockService.deleteStock(walletId, code)
+        this.stocks = this.stocks.filter(s => s !== stock)
+      }
+      catch (error) {
+        // eslint-disable-next-line no-alert
+        alert(`Erro ao excluir: ${error.message}`)
+      }
     },
   },
 }
@@ -76,6 +128,7 @@ export default {
         v-for="stock in stocks"
         :key="stock.code"
         :stock="stock"
+        @delete="removeStock"
       />
     </div>
   </div>

@@ -7,15 +7,20 @@ async function fetchStocks(walletId) {
       Authorization: `Bearer ${token}`,
     },
   })
-  if (!response.ok)
-    throw new Error('Failed to fetch stocks')
+  if (!response.ok) {
+    const err = new Error(response.status === 403
+      ? 'Access denied (403). Session may have expired.'
+      : 'Failed to fetch stocks')
+    err.status = response.status
+    throw err
+  }
   return await response.json()
 }
 
 async function addStock(walletId, newStock) {
   try {
     const token = localStorage.getItem('token')
-    const response = await fetch(`${BASE_URL}/wallet/${walletId}/stocks`, {
+    const response = await fetch(`${BASE_URL}/wallet/${walletId}/stock`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,13 +29,18 @@ async function addStock(walletId, newStock) {
       body: JSON.stringify(newStock),
     })
 
+    if (response.status === 403) {
+      const err = new Error('Access denied (403). Try logging out and logging in again.')
+      err.status = 403
+      throw err
+    }
     if (response.status === 404) {
       throw new Error('Stock not found')
     }
-    else if (response.status === 500) {
+    if (response.status === 500) {
       throw new Error('Internal server error')
     }
-    else if (!response.ok) {
+    if (!response.ok) {
       throw new Error('Failed to save stock')
     }
     return await response.json()
@@ -40,6 +50,44 @@ async function addStock(walletId, newStock) {
     throw error
   }
 }
+
+async function updateAveragePrice(walletId, code, averagePrice) {
+  const token = localStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/wallet/${walletId}/stock/${encodeURIComponent(code)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ averagePrice }),
+  })
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Stock not found')
+    }
+    throw new Error('Failed to update average price')
+  }
+
+  return await response.json()
+}
+
+async function deleteStock(walletId, code) {
+  const token = localStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/wallet/${walletId}/stock/${encodeURIComponent(code)}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Stock not found')
+    }
+    throw new Error('Failed to delete stock')
+  }
+}
+
 // TODO send the id and boolean
 // async function setNotify(id, isNotify ) {
 async function setNotify(walletId, code, notify) {
@@ -70,5 +118,7 @@ async function setNotify(walletId, code, notify) {
 export default {
   fetchStocks,
   addStock,
+  updateAveragePrice,
+  deleteStock,
   setNotify,
 }

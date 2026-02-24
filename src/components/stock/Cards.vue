@@ -9,6 +9,20 @@ export default {
       required: true,
     },
   },
+  emits: ['delete'],
+  data() {
+    return {
+      editingAverage: false,
+      editedAveragePrice: this.stock.averagePrice,
+    }
+  },
+  watch: {
+    'stock.averagePrice'(newVal) {
+      if (!this.editingAverage) {
+        this.editedAveragePrice = newVal
+      }
+    },
+  },
   methods: {
     formatCurrency(value) {
       return new Intl.NumberFormat('pt-BR', {
@@ -37,6 +51,36 @@ export default {
         this.stock.notify = !newNotify
       }
     },
+
+    startEditAverage() {
+      this.editedAveragePrice = this.stock.averagePrice
+      this.editingAverage = true
+    },
+
+    cancelEditAverage() {
+      this.editingAverage = false
+      this.editedAveragePrice = this.stock.averagePrice
+    },
+
+    async saveAveragePrice() {
+      const walletId = localStorage.getItem('walletId')
+      const parsed = Number.parseFloat(this.editedAveragePrice)
+      if (Number.isNaN(parsed)) {
+        // eslint-disable-next-line no-alert
+        alert('Please enter a valid number for average price.')
+        return
+      }
+
+      try {
+        await StockService.updateAveragePrice(walletId, this.stock.code, parsed)
+        this.stock.averagePrice = parsed
+        this.editingAverage = false
+      }
+      catch (error) {
+        // eslint-disable-next-line no-alert
+        alert(`Error updating average price: ${error.message}`)
+      }
+    },
   },
 }
 </script>
@@ -45,7 +89,44 @@ export default {
   <div class="stock-card">
     <h2>{{ stock.code }}</h2>
     <p><strong>Preço Atual:</strong> {{ formatCurrency(stock.currentPrice) }}</p>
-    <p><strong>Preço Médio:</strong> {{ formatCurrency(stock.averagePrice) }}</p>
+    <p>
+      <strong>Preço Médio:</strong>
+      <span v-if="!editingAverage">
+        {{ formatCurrency(stock.averagePrice) }}
+        <button
+          type="button"
+          class="edit-average-btn"
+          @click="startEditAverage"
+        >
+          Editar
+        </button>
+      </span>
+      <span
+        v-else
+        class="edit-average"
+      >
+        <input
+          v-model.number="editedAveragePrice"
+          type="number"
+          step="0.01"
+          class="edit-average-input"
+        >
+        <button
+          type="button"
+          class="save-average-btn"
+          @click="saveAveragePrice"
+        >
+          Salvar
+        </button>
+        <button
+          type="button"
+          class="cancel-average-btn"
+          @click="cancelEditAverage"
+        >
+          Cancelar
+        </button>
+      </span>
+    </p>
     <p><strong>Diferença: </strong>  {{ formatCurrency(getDifference(stock)) }}</p>
     <p><strong>Status: </strong>     {{ getStatus(stock) }}</p>
     <p>
@@ -55,6 +136,9 @@ export default {
         <span class="slider" />
       </label>
     </p>
+    <button type="button" class="delete-btn" title="Excluir" @click="$emit('delete', stock)">
+      Excluir
+    </button>
   </div>
 </template>
 
@@ -127,5 +211,64 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(18px);
+}
+
+.delete-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.edit-average {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+}
+
+.edit-average-input {
+  width: 80px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background-color: #111827;
+  color: #c9d1d9;
+}
+
+.edit-average-btn,
+.save-average-btn,
+.cancel-average-btn {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.edit-average-btn {
+  background-color: #1abc9c;
+  color: white;
+}
+
+.save-average-btn {
+  background-color: #1abc9c;
+  color: white;
+}
+
+.cancel-average-btn {
+  background-color: #555;
+  color: white;
 }
 </style>
