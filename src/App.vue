@@ -1,19 +1,25 @@
 <script>
 export default {
   name: 'App',
+  data() {
+    return {
+      username: localStorage.getItem('username') || '',
+      isAuthenticated: !!localStorage.getItem('token'),
+    }
+  },
   computed: {
-    username() {
-      return localStorage.getItem('username') || ''
-    },
-    isAuthenticated() {
-      return !!localStorage.getItem('token')
-    },
     showHeader() {
       const authRoutes = ['/login', '/register']
       return this.isAuthenticated && !authRoutes.includes(this.$route.path)
     },
     userInitial() {
       return this.username ? this.username.charAt(0).toUpperCase() : ''
+    },
+  },
+  watch: {
+    $route() {
+      this.username = localStorage.getItem('username') || ''
+      this.isAuthenticated = !!localStorage.getItem('token')
     },
   },
   methods: {
