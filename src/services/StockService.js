@@ -38,7 +38,14 @@ async function addStock(walletId, newStock) {
       throw new Error('Stock not found')
     }
     if (response.status === 500) {
-      throw new Error('Internal server error')
+      let message = 'Internal server error'
+      try {
+        const body = await response.json()
+        message = body.message || body.error || message
+      }
+      catch {
+      }
+      throw new Error(message)
     }
     if (!response.ok) {
       throw new Error('Failed to save stock')
