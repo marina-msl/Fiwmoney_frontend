@@ -95,22 +95,20 @@ async function deleteStock(walletId, code) {
   }
 }
 
-// TODO send the id and boolean
-// async function setNotify(id, isNotify ) {
-async function setNotify(walletId, code, notify) {
+async function setNotify(walletId, stock) {
   try {
-    // TODO: Refactor to change to a better notify endpoint
-    // const response = await fetch('http://localhost:8080/stock/id/notify', {
-    const response = await fetch(`${BASE_URL}/wallet/{walletId}/notify`, {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${BASE_URL}/wallet/${walletId}/stock/${encodeURIComponent(stock.code)}/notify`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ code, notify }),
+      body: JSON.stringify(stock),
     })
 
     if (!response.ok) {
-      throw new Error(`Erro ao atualizar notificação para ${code}`)
+      throw new Error(`Erro ao atualizar notificação para ${stock.code}`)
     }
 
     return await response.text()
