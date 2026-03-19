@@ -14,6 +14,7 @@ export default {
     return {
       editingAverage: false,
       editedAveragePrice: this.stock.averagePrice,
+      localNotify: this.stock.notify,
     }
   },
   watch: {
@@ -40,15 +41,17 @@ export default {
     },
 
     async toggleNotify() {
-      const code = this.stock.code
-      const newNotify = this.stock.notify
+      const walletId = localStorage.getItem('walletId')
+      const previousNotify = !this.localNotify
+      const stockToSend = { ...this.stock, notify: this.localNotify }
 
       try {
-        await StockService.setNotify(code, newNotify)
+        await StockService.setNotify(walletId, stockToSend)
       }
       catch (error) {
-        alert(`Erro: ${error.message}`)
-        this.stock.notify = !newNotify
+        // eslint-disable-next-line no-alert
+        alert(error.message)
+        this.localNotify = previousNotify
       }
     },
 
@@ -132,7 +135,7 @@ export default {
     <p>
       <strong>Notificar: </strong>
       <label class="switch">
-        <input v-model="stock.notify" type="checkbox" @change="toggleNotify">
+        <input v-model="localNotify" type="checkbox" @change="toggleNotify">
         <span class="slider" />
       </label>
     </p>
