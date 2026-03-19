@@ -96,28 +96,27 @@ async function deleteStock(walletId, code) {
 }
 
 async function setNotify(walletId, stock) {
-  try {
-    const token = localStorage.getItem('token')
-    const response = await fetch(`${BASE_URL}/wallet/${walletId}/stock/${encodeURIComponent(stock.code)}/notify`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(stock),
-    })
+  const token = localStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/wallet/${walletId}/stock/${encodeURIComponent(stock.code)}/notify`, {
+    method: 'PATCH',
+    headers: {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(stock),
+  })
 
-    if (!response.ok) {
-      throw new Error(`Erro ao atualizar notificação para ${stock.code}`)
+  if (!response.ok) {
+    let reason = `status ${response.status}`
+    try {
+      const body = await response.json()
+      reason = body.message || body.error || reason
     }
+    catch { }
+    throw new Error(`Failed to update notification for ${stock.code}: ${reason}`)
+  }
 
-    return await response.text()
-  }
-  catch (error) {
-    // eslint-disable-next-line no-alert
-    alert('Notify update failed: ', error.message)
-    throw error
-  }
+  return await response.text()
 }
 
 export default {
